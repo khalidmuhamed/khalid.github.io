@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khalid — Data & Commercial Analytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12212E;
+    --ink-soft:#1C2E3D;
+    --parchment:#EEE9D6;
+    --parchment-soft:#F6F2E4;
+    --moss:#2C6E8C;
+    --moss-light:#7FC6EA;
+    --clay:#B8632F;
+    --sky:#7FC6EA;
+    --slate:#5B6B63;
+    --line:#D8CFB8;
+    --line-dark:#2A3F4D;
+    --display: 'Fraunces', serif;
+    --body: 'Work Sans', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--body);
+    background:var(--parchment);
+    color:var(--ink);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{display:block; max-width:100%;}
+  a{color:inherit;}
+  .container{
+    width:100%;
+    max-width:1120px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+  @media (max-width:640px){ .container{padding:0 20px;} }
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    background:rgba(18,33,46,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line-dark);
+  }
+  .nav-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 32px; max-width:1120px; margin:0 auto;
+  }
+  .nav-mark{
+    font-family:var(--mono); font-size:13px; letter-spacing:0.08em;
+    color:var(--parchment); text-decoration:none;
+  }
+  .nav-mark strong{color:var(--moss-light);}
+  .nav-links{ display:flex; gap:28px; list-style:none; }
+  .nav-links a{
+    font-family:var(--mono); font-size:12px; letter-spacing:0.06em;
+    text-transform:uppercase; color:var(--parchment); text-decoration:none;
+    opacity:0.75; transition:opacity .2s ease;
+  }
+  .nav-links a:hover, .nav-links a:focus-visible{ opacity:1; color:var(--moss-light); }
+  @media (max-width:640px){ .nav-links{ gap:16px; } .nav-links a{ font-size:10px; } }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    background:var(--ink);
+    color:var(--parchment);
+    display:flex; align-items:center;
+    overflow:hidden;
+    padding-top:64px;
+  }
+  .hero-grid{
+    position:absolute; inset:0; opacity:0.10;
+    background-image:
+      linear-gradient(var(--moss-light) 1px, transparent 1px),
+      linear-gradient(90deg, var(--moss-light) 1px, transparent 1px);
+    background-size:56px 56px;
+    mask-image:radial-gradient(ellipse at 70% 30%, black 10%, transparent 70%);
+  }
+  .hero-motif{
+    position:absolute; right:-40px; top:50%; transform:translateY(-50%);
+    width:520px; opacity:0.16; pointer-events:none;
+  }
+  @media (max-width:900px){ .hero-motif{ width:320px; right:-80px; } }
+  @media (max-width:640px){ .hero-motif{ display:none; } }
+  .hero-inner{ position:relative; z-index:2; padding:120px 0 80px; }
+  .eyebrow{
+    font-family:var(--mono); font-size:13px; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--moss-light);
+    display:flex; align-items:center; gap:10px; margin-bottom:24px;
+  }
+  .eyebrow::before{
+    content:''; width:26px; height:1px; background:var(--moss-light);
+  }
+  h1.display{
+    font-family:var(--display); font-weight:600;
+    font-size:clamp(52px, 9vw, 108px);
+    line-height:0.98; letter-spacing:-0.01em;
+    max-width:900px;
+  }
+  h1.display em{ font-style:italic; color:var(--moss-light); font-weight:500; }
+  .hero-sub{
+    font-size:clamp(16px,2vw,19px); color:#C9D6DE; max-width:560px;
+    margin-top:28px; font-weight:400;
+  }
+  .hero-cta{ display:flex; gap:16px; margin-top:44px; flex-wrap:wrap; }
+  .btn{
+    font-family:var(--mono); font-size:13px; letter-spacing:0.04em;
+    padding:14px 26px; text-decoration:none; display:inline-block;
+    border:1px solid var(--moss-light); transition:all .25s ease;
+  }
+  .btn-primary{ background:var(--moss-light); color:var(--ink); }
+  .btn-primary:hover{ background:var(--parchment); border-color:var(--parchment); }
+  .btn-ghost{ color:var(--parchment); }
+  .btn-ghost:hover{ background:rgba(255,255,255,0.08); }
+
+  /* ---------- REVEAL ---------- */
+  .reveal{ opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.is-visible{ opacity:1; transform:translateY(0); }
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ opacity:1; transform:none; transition:none; }
+    html{ scroll-behavior:auto; }
+  }
+
+  /* ---------- SECTION SHELL ---------- */
+  section{ padding:104px 0; }
+  .section-label{
+    font-family:var(--mono); font-size:12px; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--clay);
+    display:flex; align-items:center; gap:10px; margin-bottom:18px;
+  }
+  .section-label::before{ content:''; width:22px; height:1px; background:var(--clay); }
+  h2.section-title{
+    font-family:var(--display); font-weight:600; font-size:clamp(30px,4vw,44px);
+    max-width:640px; margin-bottom:20px;
+  }
+  .section-body-copy{ max-width:600px; color:var(--slate); font-size:16px; }
+
+  /* ---------- ABOUT ---------- */
+  .about{ background:var(--parchment-soft); }
+  .about-grid{
+    display:grid; grid-template-columns:1.3fr 1fr; gap:64px; align-items:start; margin-top:48px;
+  }
+  @media (max-width:800px){ .about-grid{ grid-template-columns:1fr; gap:40px; } }
+  .about-text p{ margin-bottom:16px; color:var(--ink); font-size:16.5px; max-width:520px; }
+  .about-text p.muted{ color:var(--slate); }
+  .stat-list{ display:flex; flex-direction:column; gap:0; border-top:1px solid var(--line); }
+  .stat{
+    display:flex; justify-content:space-between; align-items:baseline;
+    padding:20px 0; border-bottom:1px solid var(--line);
+  }
+  .stat-num{ font-family:var(--mono); font-size:28px; color:var(--moss); font-weight:500; }
+  .stat-label{ font-family:var(--mono); font-size:12px; letter-spacing:0.04em; color:var(--slate); text-align:right; max-width:200px; }
+
+  /* ---------- SKILLS ---------- */
+  .skills{ background:var(--parchment-soft); padding-top:0; }
+  .pill-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top:36px; }
+  .pill{
+    font-family:var(--mono); font-size:12.5px; letter-spacing:0.02em;
+    border:1px solid var(--moss); color:var(--moss); padding:9px 16px;
+    border-radius:2px; background:transparent;
+  }
+
+  /* ---------- PROJECTS (signature: specimen tags) ---------- */
+  .projects{ background:var(--ink); color:var(--parchment); }
+  .projects .section-label{ color:var(--sky); }
+  .projects .section-label::before{ background:var(--sky); }
+  .projects h2.section-title{ color:var(--parchment); }
+  .projects .section-body-copy{ color:#B7C4CC; }
+
+  .card-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-top:56px;
+  }
+  @media (max-width:900px){ .card-grid{ grid-template-columns:1fr; max-width:480px; } }
+
+  .card-thumb{
+    width:100%; aspect-ratio:16/10; overflow:hidden;
+    border:1px solid var(--line-dark); background:var(--ink);
+  }
+  .card-thumb img{ width:100%; height:100%; object-fit:cover; object-position:top; display:block; }
+  .card-thumb.placeholder-thumb{
+    display:flex; align-items:center; justify-content:center;
+    background-image:
+      linear-gradient(var(--sky) 1px, transparent 1px),
+      linear-gradient(90deg, var(--sky) 1px, transparent 1px);
+    background-size:18px 18px;
+    background-color:var(--ink);
+    position:relative;
+  }
+  .card-thumb.placeholder-thumb::after{
+    content:'';
+    position:absolute; inset:0;
+    background:radial-gradient(ellipse at center, transparent 30%, var(--ink) 85%);
+  }
+  .card-thumb.placeholder-thumb span{
+    position:relative; z-index:1;
+    font-family:var(--mono); font-size:11px; letter-spacing:0.1em;
+    color:var(--sky); text-transform:uppercase; text-align:center; padding:0 20px;
+  }
+
+  .specimen-card{
+    position:relative;
+    background:var(--ink-soft);
+    border:1px solid var(--line-dark);
+    padding:0 0 24px;
+    display:flex; flex-direction:column; gap:16px;
+    transition:transform .3s ease, border-color .3s ease;
+    overflow:hidden;
+  }
+  .specimen-card:hover{ transform:translateY(-6px); border-color:var(--sky); }
+  .specimen-card .card-body{ padding:20px 24px 0; display:flex; flex-direction:column; gap:16px; flex:1; }
+  .catalog-row{
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:var(--mono); font-size:11px; letter-spacing:0.08em;
+    color:var(--sky); text-transform:uppercase;
+    padding-bottom:14px; border-bottom:1px dashed var(--line-dark);
+  }
+  .classification{
+    font-family:var(--mono); font-size:11px; color:#8CA3AE; letter-spacing:0.02em;
+  }
+  .specimen-title{
+    font-family:var(--display); font-size:22px; font-weight:600; line-height:1.2;
+  }
+  .specimen-notes{ font-size:14.5px; color:#C4D2D8; }
+  .instrument-row{ display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
+  .instrument-tag{
+    font-family:var(--mono); font-size:10.5px; color:var(--parchment);
+    border:1px solid var(--line-dark); padding:4px 8px;
+  }
+  .outcome{
+    margin-top:auto; padding-top:14px; border-top:1px solid var(--line-dark);
+    font-family:var(--mono); font-size:12px; color:var(--clay);
+  }
+  .outcome strong{ color:#E0A87B; }
+
+  /* ---------- CREDENTIALS ---------- */
+  .credentials{ background:var(--parchment-soft); }
+  .cred-grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:1px;
+    background:var(--line); margin-top:48px; border:1px solid var(--line);
+  }
+  @media (max-width:700px){ .cred-grid{ grid-template-columns:1fr; } }
+  .cred-item{
+    background:var(--parchment-soft); padding:22px 24px; display:flex; gap:16px; align-items:flex-start;
+  }
+  .cred-num{ font-family:var(--mono); font-size:12px; color:var(--clay); padding-top:2px; }
+  .cred-name{ font-size:15px; color:var(--ink); }
+  .cred-meta{ font-family:var(--mono); font-size:11px; color:var(--slate); margin-top:4px; }
+
+  /* ---------- CONTACT ---------- */
+  .contact{ background:var(--ink); color:var(--parchment); text-align:left; }
+  .contact .section-label{ color:var(--moss-light); }
+  .contact .section-label::before{ background:var(--moss-light); }
+  .contact h2.section-title{ color:var(--parchment); max-width:520px; }
+  .contact-links{ display:flex; flex-direction:column; gap:14px; margin-top:36px; max-width:480px; }
+  .contact-row{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:16px 0; border-bottom:1px solid var(--line-dark);
+    font-family:var(--mono); font-size:14px;
+  }
+  .contact-row span:first-child{ color:#8CA3AE; text-transform:uppercase; font-size:11px; letter-spacing:0.08em; }
+  .contact-row a{ text-decoration:none; color:var(--parchment); }
+  .contact-row a:hover{ color:var(--moss-light); }
+  .placeholder{ color:#8CA3AE; font-style:italic; }
+
+  footer{
+    background:var(--ink); color:#7C8C97; text-align:center;
+    padding:28px 0 40px; font-family:var(--mono); font-size:11.5px;
+    border-top:1px solid var(--line-dark);
+  }
+
+  :focus-visible{ outline:2px solid var(--moss-light); outline-offset:3px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#top" class="nav-mark">KHALID <strong>/ SPEC. FILE</strong></a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#credentials">Credentials</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-grid" aria-hidden="true"></div>
+  <svg class="hero-motif" viewBox="0 0 400 400" fill="none" aria-hidden="true">
+    <path d="M200 40 C 140 90, 110 160, 130 230 C 145 285, 190 330, 200 360" stroke="#7FC6EA" stroke-width="1.5"/>
+    <path d="M200 90 C 150 100, 110 90, 80 60" stroke="#7FC6EA" stroke-width="1.2"/>
+    <path d="M200 150 C 260 145, 300 110, 320 70" stroke="#7FC6EA" stroke-width="1.2"/>
+    <path d="M200 210 C 140 220, 100 210, 60 180" stroke="#7FC6EA" stroke-width="1.2"/>
+    <path d="M200 270 C 260 275, 300 260, 330 230" stroke="#7FC6EA" stroke-width="1.2"/>
+    <circle cx="200" cy="200" r="150" stroke="#7FC6EA" stroke-width="0.6" stroke-dasharray="2 6"/>
+  </svg>
+  <div class="container hero-inner">
+    <div class="eyebrow">Campaigns → business data</div>
+    <h1 class="display">Khalid,<br><em>Data &amp; Commercial</em><br>Analyst</h1>
+    <p class="hero-sub">From digital marketing to data analytics, I combine commercial thinking with a data-driven mindset.<br><br>I turn raw business data into clear insights, practical reports, and decisions that help businesses understand what's working — and what to do next.</p>
+    <div class="hero-cta">
+      <a href="#work" class="btn btn-primary">See the work</a>
+      <a href="#contact" class="btn btn-ghost">Get in touch</a>
+    </div>
+  </div>
+</header>
+
+<section class="about" id="about">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Specimen 000 — Profile</div>
+      <h2 class="section-title">From campaigns to business insights</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>I started my career in digital marketing, working on content, campaigns, and growth for businesses in competitive markets. That experience taught me how to think commercially — understand audiences, measure performance, and connect numbers to real business outcomes.</p>
+        <p>I later moved deeper into data, working with reporting, Excel, and business data to turn raw information into something teams can actually use. Along the way, I've worked on 45+ freelance projects for a range of clients, building experience across marketing, reporting, and data analysis.</p>
+        <p class="muted">Today, I'm focused on combining commercial thinking with analytics — using Excel, SQL, and Power BI to uncover insights, build clear reports, and support better business decisions.</p>
+      </div>
+      <div class="stat-list reveal">
+        <div class="stat"><span class="stat-num">45+</span><span class="stat-label">Freelance projects across marketing &amp; data clients</span></div>
+        <div class="stat"><span class="stat-num">1 yr</span><span class="stat-label">Data analyst role during military service</span></div>
+        <div class="stat"><span class="stat-num">3</span><span class="stat-label">Core tools: Excel, SQL, Power BI</span></div>
+        <div class="stat"><span class="stat-num">8+</span><span class="stat-label">Certifications &amp; simulations completed</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="skills">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Toolkit</div>
+      <h2 class="section-title">What I work with</h2>
+      <p class="section-body-copy">The instruments I reach for most, from spreadsheet-level reporting to full analytics pipelines.</p>
+    </div>
+    <div class="pill-row reveal">
+      <span class="pill">Excel — VLOOKUP &amp; Pivot Tables</span>
+      <span class="pill">Power BI</span>
+      <span class="pill">Commercial &amp; SFE Analytics</span>
+      <span class="pill">Stakeholder Reporting</span>
+      <span class="pill">Digital Marketing Analytics</span>
+      <span class="pill">Premiere Pro</span>
+      <span class="pill">Photoshop</span>
+    </div>
+  </div>
+</section>
+
+<section class="projects" id="work">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Field work</div>
+      <h2 class="section-title">Three specimens from the work</h2>
+      <p class="section-body-copy">Each project below, catalogued the way I'd catalogue anything worth keeping — what it was, what I used, what came of it.</p>
+    </div>
+
+    <div class="card-grid">
+
+      <div class="specimen-card reveal">
+        <div class="card-thumb placeholder-thumb"><span>Vehicle Returns<br>Reporting System</span></div>
+        <div class="card-body">
+          <div class="catalog-row"><span>Spec. 01</span><span>Logistics</span></div>
+          <div class="classification">Domain: Military Warehouse Data Systems</div>
+          <div class="specimen-title">Vehicle Returns Reporting System</div>
+          <p class="specimen-notes">Built an Excel-based reporting system from scratch to track vehicles and returned units at the Main Warehouse for Vehicle Returns No. 2, replacing ad-hoc record-keeping with structured, queryable data.</p>
+          <div class="instrument-row">
+            <span class="instrument-tag">Excel</span>
+            <span class="instrument-tag">VLOOKUP</span>
+            <span class="instrument-tag">Pivot Tables</span>
+          </div>
+          <div class="outcome">Result: <strong>promoted to Corporal</strong> and granted extra leave on the strength of the reporting work.</div>
+        </div>
+      </div>
+
+      <div class="specimen-card reveal">
+        <div class="card-thumb">
+          <img src="Fitman_Marketing_Dashboard.png" alt="Fitman marketing performance dashboard showing ad spend, revenue, ROAS, leads and campaign performance">
+        </div>
+        <div class="card-body">
+          <div class="catalog-row"><span>Spec. 02</span><span>Freelance</span></div>
+          <div class="classification">Domain: Digital Marketing &amp; Growth</div>
+          <div class="specimen-title">Fitman Brand Management</div>
+          <p class="specimen-notes">Managed digital marketing and reporting for Fitman, a UAE-based fitness brand, via Mostaql — running campaigns, tracking growth, and coordinating brand partnerships.</p>
+          <div class="instrument-row">
+            <span class="instrument-tag">Social Analytics</span>
+            <span class="instrument-tag">Campaign Reporting</span>
+            <span class="instrument-tag">Client Management</span>
+          </div>
+          <div class="outcome">Result: strong client ratings, <strong>significant follower growth</strong>, and partnerships with Sporter &amp; Squatwolf.</div>
+        </div>
+      </div>
+
+      <div class="specimen-card reveal">
+        <div class="card-thumb placeholder-thumb"><span>AI Data<br>Annotation</span></div>
+        <div class="card-body">
+          <div class="catalog-row"><span>Spec. 03</span><span>Freelance</span></div>
+          <div class="classification">Domain: AI Data Operations</div>
+          <div class="specimen-title">Data Annotator — Global Fleet</div>
+          <p class="specimen-notes">Nine months remote on Freelancer.com's Global Fleet workspace, annotating and validating datasets for AI/ML systems and running quality review and content evaluation against strict guidelines.</p>
+          <div class="instrument-row">
+            <span class="instrument-tag">Data Labeling</span>
+            <span class="instrument-tag">Quality Review</span>
+            <span class="instrument-tag">Guideline Evaluation</span>
+          </div>
+          <div class="outcome">Result: supported <strong>multilingual AI data operations</strong> in a remote, collaborative team.</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<section class="credentials" id="credentials">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Reference collection</div>
+      <h2 class="section-title">Certifications &amp; simulations</h2>
+    </div>
+    <div class="cred-grid reveal">
+      <div class="cred-item">
+        <span class="cred-num">01</span>
+        <div><div class="cred-name">Google Data Analytics Professional Certificate</div><div class="cred-meta">Completed</div></div>
+      </div>
+      <div class="cred-item">
+        <span class="cred-num">02</span>
+        <div><div class="cred-name">Cisco Data Analytics Essentials</div><div class="cred-meta">Certification</div></div>
+      </div>
+      <div class="cred-item">
+        <span class="cred-num">03</span>
+        <div><div class="cred-name">Digital Marketing Nanodegree</div><div class="cred-meta">Udacity</div></div>
+      </div>
+      <div class="cred-item">
+        <span class="cred-num">04</span>
+        <div><div class="cred-name">Power BI Track</div><div class="cred-meta">DataCamp — in progress</div></div>
+      </div>
+      <div class="cred-item">
+        <span class="cred-num">05</span>
+        <div><div class="cred-name">Molecule to Market Simulation</div><div class="cred-meta">Pfizer, via Forage</div></div>
+      </div>
+      <div class="cred-item">
+        <span class="cred-num">06</span>
+        <div><div class="cred-name">Climate Change Simulation</div><div class="cred-meta">Oliver Wyman</div></div>
+      </div>
+      <div class="cred-item">
+        <span class="cred-num">07</span>
+        <div><div class="cred-name">Research Trainee, Center of Excellence in Cancer Research</div><div class="cred-meta">Tanta University, Jul–Aug 2023</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Get in touch</div>
+      <h2 class="section-title">Open to data, analytics &amp; commercial operations roles.</h2>
+      <p class="section-body-copy" style="color:#B7C4CC;">Based in Egypt, open to relocating within the country.</p>
+    </div>
+    <div class="contact-links reveal">
+      <div class="contact-row"><span>Email</span><a href="mailto:ikhaliidmuhammed@gmail.com">ikhaliidmuhammed@gmail.com</a></div>
+      <div class="contact-row"><span>LinkedIn</span><a href="https://www.linkedin.com/in/khalid-muhammed-taher" target="_blank" rel="noopener">linkedin.com/in/khalid-muhammed-taher</a></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  KHALID — DATA &amp; COMMERCIAL ANALYTICS PORTFOLIO
+</footer>
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
